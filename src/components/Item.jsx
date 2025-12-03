@@ -10,19 +10,15 @@ const Item = ({
   deleteHandler,
 }) => {
   return (
-    <li>
-      <span>
+    <li className="item">
+      <span style={{ width: "40%" }}>
         <a href={url}>{title}</a>
         <br />
       </span>
-      <span>{author}</span>
-      <span>{num_comments}</span>
-      <span>{points}</span>
-      <button
-        onClick={() => deleteHandler(objectID)}
-      >
-        Delete
-      </button>
+      <span style={{ width: "30%" }}>{author}</span>
+      <span style={{ width: "10%" }}>{num_comments}</span>
+      <span style={{ width: "10%" }}>{points}</span>
+      <button className='button button_small' onClick={() => deleteHandler(objectID)}>Delete</button>
     </li>
   );
 };

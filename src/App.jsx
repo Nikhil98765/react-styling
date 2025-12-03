@@ -161,14 +161,11 @@ export const App = () => {
   // const searchedStories = stories.data.filter(story => story.title?.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <>
-      <h1>{title}</h1>
+    <div className='container'>
+      <h1 className='headline-primary'>{title}</h1>
       <SearchForm {...{ storyEndpoint, searchTerm, handleSearch, setUrl }} />
-      <br />
-      <br />
       {/* <InputWithLabel id="input-with-label" label="Search : " /> */}
 
-      <hr />
 
       {stories.isError && <p>Something went wrong ...</p>}
 
@@ -182,7 +179,7 @@ export const App = () => {
 
       {/* <LoginFormUncontrolled /> */}
       <LoginFormControlled></LoginFormControlled>
-    </>
+    </div>
   );
 }
 
