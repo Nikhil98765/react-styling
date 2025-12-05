@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
 
-import './App.css'
+import styles from './App.module.css';
 import { Dnd } from './components/Dnd';
 import {InputWithLabel} from './components/InputWithLabel';
 import { List } from './components/List';
@@ -161,8 +161,8 @@ export const App = () => {
   // const searchedStories = stories.data.filter(story => story.title?.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div className='container'>
-      <h1 className='headline-primary'>{title}</h1>
+    <div className={`${styles.container}`}>
+      <h1 className={`${styles.headlinePrimary}`}>{title}</h1>
       <SearchForm {...{ storyEndpoint, searchTerm, handleSearch, setUrl }} />
       {/* <InputWithLabel id="input-with-label" label="Search : " /> */}
 

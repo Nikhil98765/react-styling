@@ -1,3 +1,6 @@
+import clsx from 'clsx';
+
+import styles from '../App.module.css';
 import { Search } from "./Search";
 
 export const SearchForm = ({storyEndpoint, searchTerm, handleSearch, setUrl}) => {
@@ -8,7 +11,7 @@ export const SearchForm = ({storyEndpoint, searchTerm, handleSearch, setUrl}) =>
           }}>
             <Search searchTerm={searchTerm} onSearch={handleSearch} />
             <button
-              className="button button_large"
+        className={clsx(styles.button, { [styles.buttonLarge]:  true})}
               type='submit'
               disabled={!searchTerm}
             >
