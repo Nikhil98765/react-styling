@@ -1,4 +1,4 @@
-import React from 'react';
+import styled from "styled-components";
 
 const Item = ({
   objectID,
@@ -9,17 +9,60 @@ const Item = ({
   title,
   deleteHandler,
 }) => {
+  const StyledItem = styled.li`
+    display: flex;
+    align-items: center;
+    padding-bottom: 5px;
+  `;
+
+  const StyledColumn = styled.span`
+    padding: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    a {
+      color: inherit;
+    }
+
+    width: ${(props) => props.width}
+  `;
+
+  const StyledButton = styled.button`
+    background: transparent;
+    border: 1px solid #171212;
+    padding: 5px;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+
+    &:hover {
+      background: #171212;
+      color: #ffffff;
+    }
+  `;
+
+  const StyledButtonSmall = styled(StyledButton)`
+    padding: 5px;
+  `;
+
+
+
   return (
-    <li className="item">
-      <span style={{ width: "40%" }}>
+    <StyledItem className="item">
+      <StyledColumn width="40%">
         <a href={url}>{title}</a>
         <br />
-      </span>
-      <span style={{ width: "30%" }}>{author}</span>
-      <span style={{ width: "10%" }}>{num_comments}</span>
-      <span style={{ width: "10%" }}>{points}</span>
-      <button className='button button_small' onClick={() => deleteHandler(objectID)}>Delete</button>
-    </li>
+      </StyledColumn>
+      <StyledColumn width="30%">{author}</StyledColumn>
+      <StyledColumn width="10%">{num_comments}</StyledColumn>
+      <StyledColumn width="10%">{points}</StyledColumn>
+      <StyledButtonSmall
+        onClick={() => deleteHandler(objectID)}
+      >
+        Delete
+      </StyledButtonSmall>
+    </StyledItem>
   );
 };
 

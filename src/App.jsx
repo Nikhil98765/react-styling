@@ -1,19 +1,14 @@
 import { useCallback, useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
+import styled from 'styled-components';
 
 import styles from './App.module.css';
-import { Dnd } from './components/Dnd';
-import {InputWithLabel} from './components/InputWithLabel';
 import { List } from './components/List';
-import { Search } from './components/Search';
 import { SearchForm } from './components/SearchForm';
-import { LoginFormUncontrolled } from './components/LoginFormUncontrolled';
 import { LoginFormControlled } from './components/LoginFormControlled';
-// import { useStorageState } from './hooks/useStorageState';
 
 const title = "Hello React";
 const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
-// const debounceValue = 600;
 // const list = [
 //   {
 //     title: "React",
@@ -35,12 +30,23 @@ const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
 
 export const App = () => {
 
-  // const [searchTerm, setSearchTerm] = useStorageState('search', 'react');
   const [searchTerm, setSearchTerm] = useState('');
   const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
-  // const [stories, setStories] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // let timer = useRef(null);
+
+  const StyledContainer = styled.div`
+    height: 100vw;
+    padding: 20px;
+    background: #83a4d4;
+    background: linear-gradient(to left, #b6fbff, #83a4d4);
+    color: #171212;
+  `;
+
+  const StyledHeadlinePrimary = styled.h1`
+    font-size: 48px;
+    font-weight: 300;
+    letter-spacing: 2px;
+  `;
+
 
   const ACTIONS = {
     STORIES_FETCH_SUCCESS: "STORIES_FETCH_SUCCESS",
@@ -88,22 +94,11 @@ export const App = () => {
     isError: false
   });
 
-  // const getAsyncStories = () => {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       // resolve(list);
-  //       reject();
-  //     }, 2000);
-  //   })
-  // }
-
   const handleFetchStories = useCallback(async () => {
-    // setIsLoading(true);
     storiesDispatcher({
       type: ACTIONS.STORIES_FETCH_INIT,
     });
 
-    // timer.current = setTimeout(() => {
     try {
       const results = await axios.get(url);
       storiesDispatcher({
@@ -115,26 +110,6 @@ export const App = () => {
             type: ACTIONS.STORIES_FETCH_FAILURE,
       });
     }
-
-      // .then(
-      //   (results) => {
-      //     // setStories(results);
-      //     storiesDispatcher({
-      //       type: ACTIONS.STORIES_FETCH_SUCCESS,
-      //       payload: results.data.hits,
-      //     });
-      //   },
-      //   () => {
-      //     storiesDispatcher({
-      //       type: ACTIONS.STORIES_FETCH_FAILURE,
-      //     });
-      //   }
-      // );
-    // }, debounceValue);
-
-    // return () => {
-    //   clearTimeout(timer.current);
-    // };
   }, [url]);
 
   useEffect(() => {
@@ -143,13 +118,10 @@ export const App = () => {
 
   function handleSearch(event) {
       setSearchTerm(event.target.value);
-    // Side effect, we can handle the side effects using useEffect
-    // localStorage.setItem("searchTerm", event.target.value);
   }
 
 
   const deleteStory = (id) => {
-    // setStories(stories.filter((story) => story.objectID !== id));
     storiesDispatcher({
       type: ACTIONS.REMOVE_STORY,
       payload: {
@@ -158,14 +130,11 @@ export const App = () => {
     });
   }
 
-  // const searchedStories = stories.data.filter(story => story.title?.toLowerCase().includes(searchTerm.toLowerCase()));
 
   return (
-    <div className={`${styles.container}`}>
-      <h1 className={`${styles.headlinePrimary}`}>{title}</h1>
+    <StyledContainer className={`${styles.container}`}>
+      <StyledHeadlinePrimary className={`${styles.headlinePrimary}`}>{title}</StyledHeadlinePrimary>
       <SearchForm {...{ storyEndpoint, searchTerm, handleSearch, setUrl }} />
-      {/* <InputWithLabel id="input-with-label" label="Search : " /> */}
-
 
       {stories.isError && <p>Something went wrong ...</p>}
 
@@ -174,12 +143,8 @@ export const App = () => {
       ) : (
         <List list={stories.data} deleteHandler={deleteStory} />
       )}
-
-      {/* <Dnd /> */}
-
-      {/* <LoginFormUncontrolled /> */}
       <LoginFormControlled></LoginFormControlled>
-    </div>
+    </StyledContainer>
   );
 }
 
