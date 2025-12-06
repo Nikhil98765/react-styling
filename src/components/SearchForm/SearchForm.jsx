@@ -16,7 +16,8 @@ export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }) 
       {/* <S.StyledButtonLarge disabled={!searchTerm} className={cs({invalid: true})}>Search</S.StyledButtonLarge> */}
 
       {/* Through props , more savvy to js developers */}
-      <S.StyledButtonLarge disabled={!searchTerm} invalid={true}>
+      {/* Best Practice: Mark the props consumed by styled component to start with $ */}
+      <S.StyledButtonLarge disabled={!searchTerm} $invalid={true}>
         Search
       </S.StyledButtonLarge>
     </S.StyledSearchForm>

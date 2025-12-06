@@ -26,5 +26,6 @@ export const StyledButtonLarge = styled(StyledButton)`
   /* &.invalid {
     text-decoration: line-through;
   } */
-   text-decoration:${props => props.invalid ? 'line-through' : 'none'};
+    /* Best Practice: Destructure the props  */
+   text-decoration:${({$invalid}) => $invalid ? 'line-through' : 'none'};
 `;
