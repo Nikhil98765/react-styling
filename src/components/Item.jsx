@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+import Check from "../assets/check.svg?react";
+
+
 const Item = ({
   objectID,
   url,
@@ -60,7 +63,7 @@ const Item = ({
       <StyledButtonSmall
         onClick={() => deleteHandler(objectID)}
       >
-        Delete
+        <Check height="18px" width="18px"/>
       </StyledButtonSmall>
     </StyledItem>
   );
