@@ -6,8 +6,8 @@ import GlobalStyle from "./globalStyles";
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <>
     <GlobalStyle />
     <App />
-  </StrictMode>,
+  </>,
 )

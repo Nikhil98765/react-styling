@@ -42,7 +42,6 @@ export const LoginFormControlled = () => {
   const [form, setForm] = useState({});
 
   const errorFields = getErrorFields(form);
-  console.log("🚀 ~ LoginFormControlled ~ errorFields:", errorFields)
 
   const handleChange = (e) => {
     setForm({
