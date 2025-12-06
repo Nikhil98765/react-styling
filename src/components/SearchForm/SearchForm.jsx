@@ -1,4 +1,5 @@
 import * as S from './Styles';
+import cs from 'classnames';
 import { Search } from "../Search";
 
 export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }) => {
@@ -11,7 +12,13 @@ export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }) 
       }}
     >
       <Search searchTerm={searchTerm} onSearch={handleSearch} />
-      <S.StyledButtonLarge disabled={!searchTerm}>Search</S.StyledButtonLarge>
+      {/* Through classnames function, more savvy to css developers */}
+      {/* <S.StyledButtonLarge disabled={!searchTerm} className={cs({invalid: true})}>Search</S.StyledButtonLarge> */}
+
+      {/* Through props , more savvy to js developers */}
+      <S.StyledButtonLarge disabled={!searchTerm} invalid={true}>
+        Search
+      </S.StyledButtonLarge>
     </S.StyledSearchForm>
   );
 }

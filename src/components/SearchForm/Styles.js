@@ -18,11 +18,13 @@ export const StyledButton = styled.button`
     color: #ffffff;
   }
 
-  &.invalid {
-    text-decoration: line-through;
-  }
+  
 `;
 
 export const StyledButtonLarge = styled(StyledButton)`
   padding: 10px;
+  /* &.invalid {
+    text-decoration: line-through;
+  } */
+   text-decoration:${props => props.invalid ? 'line-through' : 'none'};
 `;
