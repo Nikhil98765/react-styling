@@ -36,9 +36,6 @@ import React, { useState } from 'react'
 // Controlled react form
 export const LoginFormControlled = () => {
 
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-
   const [form, setForm] = useState({});
 
   const errorFields = getErrorFields(form);

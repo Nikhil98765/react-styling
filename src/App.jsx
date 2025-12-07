@@ -25,34 +25,11 @@ const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
     letter-spacing: 2px;
   `;
 
-// const list = [
-//   {
-//     title: "React",
-//     url: "https://react.dev/",
-//     author: "Jordan Walke",
-//     num_comments: 3,
-//     points: 4,
-//     objectID: 0,
-//   },
-//   {
-//     title: "Angular",
-//     url: "https://redux.js.org/",
-//     author: "Dan Abramov, Andrew Clark",
-//     num_comments: 2,
-//     points: 5,
-//     objectID: 1,
-//   },
-// ];
-
 export const App = () => {
-console.log("🚀 ~ App");
 
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState('search', '');
   const [searchTerm, setSearchTerm] = useState(savedSearchTerm);
   const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
-
-
-
 
   const ACTIONS = {
     STORIES_FETCH_SUCCESS: "STORIES_FETCH_SUCCESS",
@@ -122,23 +99,19 @@ console.log("🚀 ~ App");
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleSearch = useCallback(
-    (event) => {
+  const handleSearch = (event) => {
       setSearchTerm(event.target.value);
       setSavedSearchTerm(event.target.value);
-    },
-    [setSearchTerm, setSavedSearchTerm]
-  );
+  };
 
-  const deleteStory = useCallback((id) => {
+  const deleteStory = (id) => {
     storiesDispatcher({
       type: ACTIONS.REMOVE_STORY,
       payload: {
         objectID: id,
       },  
     });
-  }, []);
-
+  }
 
   return (
     <StyledContainer className={`${styles.container}`}>

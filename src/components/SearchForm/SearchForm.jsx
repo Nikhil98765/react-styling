@@ -1,10 +1,9 @@
-import * as S from './Styles';
-// import cs from 'classnames';
-import { Search } from "../Search";
 import { memo } from 'react';
 
+import * as S from './Styles';
+import { Search } from "../Search";
+
 export const SearchForm = memo(({ storyEndpoint, searchTerm, handleSearch, setUrl }) => {
-  console.log("🚀 ~ SearchForm");
 
   return (
     <S.StyledSearchForm
@@ -14,11 +13,6 @@ export const SearchForm = memo(({ storyEndpoint, searchTerm, handleSearch, setUr
       }}
     >
       <Search searchTerm={searchTerm} onSearch={handleSearch} />
-      {/* Through classnames function, more savvy to css developers */}
-      {/* <S.StyledButtonLarge disabled={!searchTerm} className={cs({invalid: true})}>Search</S.StyledButtonLarge> */}
-
-      {/* Through props , more savvy to js developers */}
-      {/* Best Practice: Mark the props consumed by styled component to start with $ */}
       <S.StyledButtonLarge disabled={!searchTerm} $invalid={true}>
         Search
       </S.StyledButtonLarge>

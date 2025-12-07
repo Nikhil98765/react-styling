@@ -3,7 +3,6 @@ import { memo } from "react";
 import Item from "./Item.jsx";
 
 export const List = memo(({ list, deleteHandler }) => {
-console.log("🚀 ~ List");
 
   return (
     <ul>
