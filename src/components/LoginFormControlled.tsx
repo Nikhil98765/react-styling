@@ -1,25 +1,25 @@
-import { useState } from 'react'
+import { ChangeEvent, FormEvent, useState } from 'react'
 
  const VALIDATION = {
    email: [
      {
-       isValid: (value) => !!value,
+       isValid: (value: string) => !!value,
        message: "Email should not be empty",
      },
      {
-       isValid: (value) => /\S+@\S+\.\S+/.test(value),
+       isValid: (value: string) => /\S+@\S+\.\S+/.test(value),
        message: "Needs to be an email",
      },
    ],
    password: [
      {
-       isValid: (value) => !!value,
+       isValid: (value: string) => !!value,
        message: "Is required",
      },
    ],
  };
 
-  const getErrorFields = (form) => {
+  const getErrorFields = (form: {[key: string]: string}) => {
     return Object.keys(form).reduce((prev, key) => {
       if (!VALIDATION[key]) return prev;
 
@@ -36,18 +36,18 @@ import { useState } from 'react'
 // Controlled react form
 export const LoginFormControlled = () => {
 
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState<{[key: string]: string}>({});
 
   const errorFields = getErrorFields(form);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
       [e.target.id] : e.target.value
     })
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const hasErrors = Object.values(errorFields).flat().length > 0;
 

@@ -1,14 +1,14 @@
-import React, { useRef } from 'react'
+import React, { FormEvent, useRef } from 'react'
 
 // UnControlled react form
 export const LoginFormUncontrolled = () => {
 
-  const emailRef = useRef();
-  const passwordRef = useRef();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    alert(`Email: ${emailRef.current.value}, password: ${passwordRef.current.value}`);
+    alert(`Email: ${emailRef.current?.value}, password: ${passwordRef.current?.value}`);
   }
 
   return (
