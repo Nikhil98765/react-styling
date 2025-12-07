@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 
 // custom hook
-export const useStorageState = (key, initialState) => {
+export const useStorageState = (key: string, initialState: string) => {
   const isMounted = useRef(false);
   const [searchTerm, setSearchTerm] = useState(localStorage.getItem(key) ?? initialState);
 
@@ -17,6 +17,6 @@ export const useStorageState = (key, initialState) => {
 
   }, [key, searchTerm]);
 
-  return [searchTerm, setSearchTerm];
+  return [searchTerm, setSearchTerm] as const;
 
 }

@@ -17,15 +17,14 @@ export const StyledButton = styled.button`
     background: #171212;
     color: #ffffff;
   }
-
-  
 `;
 
-export const StyledButtonLarge = styled(StyledButton)`
+type ButtonLargeProps = {
+  $invalid: boolean;
+  disabled: boolean;
+}
+
+export const StyledButtonLarge = styled(StyledButton)<ButtonLargeProps>`
   padding: 10px;
-  /* &.invalid {
-    text-decoration: line-through;
-  } */
-    /* Best Practice: Destructure the props  */
-   text-decoration:${({$invalid}) => $invalid ? 'line-through' : 'none'};
+  text-decoration: ${(props) => (props.$invalid ? "line-through" : "none")};
 `;

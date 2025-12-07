@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -7,6 +7,7 @@ import { List } from './components/List';
 import { SearchForm } from './components/SearchForm';
 import { LoginFormControlled } from './components/LoginFormControlled';
 import { useStorageState } from './hooks/useStorageState';
+import { Story } from './utils';
 
 const title = "Hello React";
 const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
@@ -25,6 +26,14 @@ const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
     letter-spacing: 2px;
   `;
 
+type AppState = {
+  data: Story[];
+  isLoading: boolean;
+  isError: boolean;
+}
+
+
+
 export const App = () => {
 
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState('search', '');
@@ -36,24 +45,49 @@ export const App = () => {
     REMOVE_STORY: "REMOVE_STORY",
     STORIES_FETCH_INIT: "STORIES_FETCH_INIT",
     STORIES_FETCH_FAILURE: "STORIES_FETCH_FAILURE"
+  } as const;
+  
+  type StoriesFetchInitAction = {
+    type: 'STORIES_FETCH_INIT'
+  };
+  type StoriesFetchFailureAction = {
+    type: "STORIES_FETCH_FAILURE";
   };
 
-  const storiesReducer = (state, {type, payload}) => {
-    switch (type) {
+  type StoriesFetchSuccessAction = {
+    type: "STORIES_FETCH_SUCCESS";
+    payload: Story[];
+  };
+
+  type RemoveStoryAction = {
+    type: "REMOVE_STORY";
+    payload: { objectID: string };
+  };
+
+  type StoriesAction = StoriesFetchInitAction
+    | StoriesFetchFailureAction
+    | StoriesFetchSuccessAction
+    | RemoveStoryAction;
+
+  const storiesReducer = (state: AppState, action: StoriesAction ) => {
+    switch (action.type) {
       case ACTIONS.STORIES_FETCH_SUCCESS:
-        return {
-          data: payload,
-          isLoading: false,
-          isError: false,
-        };
+          return {
+            data: (action as StoriesFetchSuccessAction).payload,
+            isLoading: false,
+            isError: false,
+          };
       case ACTIONS.REMOVE_STORY: {
-        const filteredStories = state.data.filter((story) => story.objectID !== payload.objectID);
-        return {
-          data: filteredStories,
-          isLoading: false,
-          isError: false,
+        const { payload } = (action as RemoveStoryAction);
+          const filteredStories = state.data.filter(
+            (story) => story.objectID !== payload.objectID
+          );
+          return {
+            data: filteredStories,
+            isLoading: false,
+            isError: false,
+          };
         }
-      }
       case ACTIONS.STORIES_FETCH_INIT:
         return {
           data: [],
@@ -65,11 +99,11 @@ export const App = () => {
           data: [],
           isLoading: false,
           isError: true,
-        }
+        };
       default:
         throw new Error();
     }
-  }
+  };
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
     data: [],
@@ -99,12 +133,12 @@ export const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  const handleSearch = (event) => {
-      setSearchTerm(event.target.value);
-      setSavedSearchTerm(event.target.value);
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setSavedSearchTerm(event.target.value);
   };
 
-  const deleteStory = (id) => {
+  const deleteStory = (id: string) => {
     storiesDispatcher({
       type: ACTIONS.REMOVE_STORY,
       payload: {

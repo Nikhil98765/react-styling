@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
 import Check from "../assets/check.svg?react";
+import { Story } from "../utils";
+
+type ItemProps = {
+  item: Story;
+  deleteHandler: (objectID: string) => void;
+};
 
 const StyledItem = styled.li`
   display: flex;
@@ -8,7 +14,11 @@ const StyledItem = styled.li`
   padding-bottom: 5px;
 `;
 
-const StyledColumn = styled.span`
+type StyledItemProps = {
+  width: string;
+};
+
+const StyledColumn = styled.span<StyledItemProps>`
   padding: 0 5px;
   white-space: nowrap;
   overflow: hidden;
@@ -39,30 +49,18 @@ const StyledButtonSmall = styled(StyledButton)`
   padding: 5px;
 `;
 
-
-const Item = ({
-  objectID,
-  url,
-  author,
-  num_comments,
-  points,
-  title,
-  deleteHandler,
-}) => {
-
+const Item = ({item, deleteHandler}: ItemProps) => {
   return (
     <StyledItem className="item">
       <StyledColumn width="40%">
-        <a href={url}>{title}</a>
+        <a href={item.url}>{item.title}</a>
         <br />
       </StyledColumn>
-      <StyledColumn width="30%">{author}</StyledColumn>
-      <StyledColumn width="10%">{num_comments}</StyledColumn>
-      <StyledColumn width="10%">{points}</StyledColumn>
-      <StyledButtonSmall
-        onClick={() => deleteHandler(objectID)}
-      >
-        <Check height="18px" width="18px"/>
+      <StyledColumn width="30%">{item.author}</StyledColumn>
+      <StyledColumn width="10%">{item.num_comments}</StyledColumn>
+      <StyledColumn width="10%">{item.points}</StyledColumn>
+      <StyledButtonSmall onClick={() => deleteHandler(item.objectID)}>
+        <Check height="18px" width="18px" />
       </StyledButtonSmall>
     </StyledItem>
   );
