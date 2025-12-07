@@ -1,8 +1,10 @@
 import * as S from './Styles';
-import cs from 'classnames';
+// import cs from 'classnames';
 import { Search } from "../Search";
+import { memo } from 'react';
 
-export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }) => {
+export const SearchForm = memo(({ storyEndpoint, searchTerm, handleSearch, setUrl }) => {
+  console.log("🚀 ~ SearchForm");
 
   return (
     <S.StyledSearchForm
@@ -22,4 +24,4 @@ export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }) 
       </S.StyledButtonLarge>
     </S.StyledSearchForm>
   );
-}
+});

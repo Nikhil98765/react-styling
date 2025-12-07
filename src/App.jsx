@@ -45,6 +45,7 @@ const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
 // ];
 
 export const App = () => {
+console.log("🚀 ~ App");
 
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState('search', '');
   const [searchTerm, setSearchTerm] = useState(savedSearchTerm);
@@ -69,7 +70,7 @@ export const App = () => {
           isError: false,
         };
       case ACTIONS.REMOVE_STORY: {
-        const filteredStories = state.filter((story) => story.objectID !== payload.objectID);
+        const filteredStories = state.data.filter((story) => story.objectID !== payload.objectID);
         return {
           data: filteredStories,
           isLoading: false,
@@ -121,19 +122,22 @@ export const App = () => {
     handleFetchStories();
   }, [handleFetchStories]);
 
-  function handleSearch(event) {
-    setSearchTerm(event.target.value);
-    setSavedSearchTerm(event.target.value);
-  }
+  const handleSearch = useCallback(
+    (event) => {
+      setSearchTerm(event.target.value);
+      setSavedSearchTerm(event.target.value);
+    },
+    [setSearchTerm, setSavedSearchTerm]
+  );
 
-  const deleteStory = (id) => {
+  const deleteStory = useCallback((id) => {
     storiesDispatcher({
       type: ACTIONS.REMOVE_STORY,
       payload: {
         objectID: id,
-      },
+      },  
     });
-  }
+  }, []);
 
 
   return (

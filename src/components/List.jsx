@@ -1,7 +1,10 @@
+import { memo } from "react";
 
 import Item from "./Item.jsx";
 
-export const List = ({ list, deleteHandler }) => {
+export const List = memo(({ list, deleteHandler }) => {
+console.log("🚀 ~ List");
+
   return (
     <ul>
       {list.map((item) => (
@@ -13,4 +16,4 @@ export const List = ({ list, deleteHandler }) => {
       ))}
     </ul>
   );
-};
+});
