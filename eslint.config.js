@@ -2,15 +2,14 @@ import js from "@eslint/js";
 import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import vitestPlugin from "eslint-plugin-vitest";
+
 import tseslint from "typescript-eslint";
 
-export default tseslint.config(
+export default tseslint.config([
   { ignores: ["dist"] },
   {
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-    ],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       ecmaVersion: 2020,
@@ -29,5 +28,14 @@ export default tseslint.config(
       ],
       "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
     },
-  }
-);
+  },
+  {
+    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    plugins: {
+      vitest: vitestPlugin,
+    },
+    rules: {
+      ...vitestPlugin.configs.recommended.rules,
+    },
+  },
+]);

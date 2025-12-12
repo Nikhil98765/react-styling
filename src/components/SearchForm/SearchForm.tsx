@@ -10,7 +10,7 @@ type SearchFormProps = {
   setUrl: (value: string) => void;
 };
 
-export const SearchForm = memo(({ storyEndpoint, searchTerm, handleSearch, setUrl }: SearchFormProps) => {
+export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }: SearchFormProps) => {
 
   return (
     <StyledSearchForm
@@ -25,4 +25,4 @@ export const SearchForm = memo(({ storyEndpoint, searchTerm, handleSearch, setUr
       </StyledButtonLarge>
     </StyledSearchForm>
   );
-});
+};

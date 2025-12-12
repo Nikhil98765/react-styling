@@ -26,11 +26,77 @@ const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
     letter-spacing: 2px;
   `;
 
-type AppState = {
+export type AppState = {
   data: Story[];
   isLoading: boolean;
   isError: boolean;
 }
+
+  const ACTIONS = {
+    STORIES_FETCH_SUCCESS: "STORIES_FETCH_SUCCESS",
+    REMOVE_STORY: "REMOVE_STORY",
+    STORIES_FETCH_INIT: "STORIES_FETCH_INIT",
+    STORIES_FETCH_FAILURE: "STORIES_FETCH_FAILURE",
+  } as const;
+
+  export type StoriesFetchInitAction = {
+    type: "STORIES_FETCH_INIT";
+  };
+  export type StoriesFetchFailureAction = {
+    type: "STORIES_FETCH_FAILURE";
+  };
+
+  export type StoriesFetchSuccessAction = {
+    type: "STORIES_FETCH_SUCCESS";
+    payload: Story[];
+  };
+
+  export type RemoveStoryAction = {
+    type: "REMOVE_STORY";
+    payload: { objectID: string };
+  };
+
+  type StoriesAction =
+    | StoriesFetchInitAction
+    | StoriesFetchFailureAction
+    | StoriesFetchSuccessAction
+    | RemoveStoryAction;
+
+ export const storiesReducer = (state: AppState, action: StoriesAction) => {
+   switch (action.type) {
+     case ACTIONS.STORIES_FETCH_SUCCESS:
+       return {
+         data: (action as StoriesFetchSuccessAction).payload,
+         isLoading: false,
+         isError: false,
+       };
+     case ACTIONS.REMOVE_STORY: {
+       const { payload } = action as RemoveStoryAction;
+       const filteredStories = state.data.filter(
+         (story) => story.objectID !== payload.objectID
+       );
+       return {
+         data: filteredStories,
+         isLoading: false,
+         isError: false,
+       };
+     }
+     case ACTIONS.STORIES_FETCH_INIT:
+       return {
+         data: [],
+         isLoading: true,
+         isError: false,
+       };
+     case ACTIONS.STORIES_FETCH_FAILURE:
+       return {
+         data: [],
+         isLoading: false,
+         isError: true,
+       };
+     default:
+       throw new Error();
+   }
+ };
 
 
 
@@ -39,71 +105,6 @@ export const App = () => {
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState('search', '');
   const [searchTerm, setSearchTerm] = useState(savedSearchTerm);
   const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
-
-  const ACTIONS = {
-    STORIES_FETCH_SUCCESS: "STORIES_FETCH_SUCCESS",
-    REMOVE_STORY: "REMOVE_STORY",
-    STORIES_FETCH_INIT: "STORIES_FETCH_INIT",
-    STORIES_FETCH_FAILURE: "STORIES_FETCH_FAILURE"
-  } as const;
-  
-  type StoriesFetchInitAction = {
-    type: 'STORIES_FETCH_INIT'
-  };
-  type StoriesFetchFailureAction = {
-    type: "STORIES_FETCH_FAILURE";
-  };
-
-  type StoriesFetchSuccessAction = {
-    type: "STORIES_FETCH_SUCCESS";
-    payload: Story[];
-  };
-
-  type RemoveStoryAction = {
-    type: "REMOVE_STORY";
-    payload: { objectID: string };
-  };
-
-  type StoriesAction = StoriesFetchInitAction
-    | StoriesFetchFailureAction
-    | StoriesFetchSuccessAction
-    | RemoveStoryAction;
-
-  const storiesReducer = (state: AppState, action: StoriesAction ) => {
-    switch (action.type) {
-      case ACTIONS.STORIES_FETCH_SUCCESS:
-          return {
-            data: (action as StoriesFetchSuccessAction).payload,
-            isLoading: false,
-            isError: false,
-          };
-      case ACTIONS.REMOVE_STORY: {
-        const { payload } = (action as RemoveStoryAction);
-          const filteredStories = state.data.filter(
-            (story) => story.objectID !== payload.objectID
-          );
-          return {
-            data: filteredStories,
-            isLoading: false,
-            isError: false,
-          };
-        }
-      case ACTIONS.STORIES_FETCH_INIT:
-        return {
-          data: [],
-          isLoading: true,
-          isError: false,
-        };
-      case ACTIONS.STORIES_FETCH_FAILURE:
-        return {
-          data: [],
-          isLoading: false,
-          isError: true,
-        };
-      default:
-        throw new Error();
-    }
-  };
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
     data: [],
