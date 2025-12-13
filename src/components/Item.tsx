@@ -60,7 +60,7 @@ const Item = ({item, deleteHandler}: ItemProps) => {
       <StyledColumn width="10%">{item.num_comments}</StyledColumn>
       <StyledColumn width="10%">{item.points}</StyledColumn>
       <StyledButtonSmall onClick={() => deleteHandler(item.objectID)}>
-        <Check height="18px" width="18px" />
+        Dismiss
       </StyledButtonSmall>
     </StyledItem>
   );

@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import styles from './App.module.css';
 import { List } from './components/List';
 import { SearchForm } from './components/SearchForm';
-import { LoginFormControlled } from './components/LoginFormControlled';
 import { useStorageState } from './hooks/useStorageState';
 import { Story } from './utils';
 
@@ -103,7 +102,7 @@ export type AppState = {
 export const App = () => {
 
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState('search', '');
-  const [searchTerm, setSearchTerm] = useState(savedSearchTerm);
+  const [searchTerm, setSearchTerm] = useState('React');
   const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
@@ -160,7 +159,6 @@ export const App = () => {
       ) : (
         <List list={stories.data} deleteHandler={deleteStory} />
       )}
-      <LoginFormControlled></LoginFormControlled>
     </StyledContainer>
   );
 }

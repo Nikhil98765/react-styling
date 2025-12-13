@@ -20,7 +20,7 @@ export const SearchForm = ({ storyEndpoint, searchTerm, handleSearch, setUrl }: 
       }}
     >
       <Search searchTerm={searchTerm} onSearch={handleSearch} />
-      <StyledButtonLarge disabled={!searchTerm} $invalid={true}>
+      <StyledButtonLarge disabled={!searchTerm} $invalid={false}>
         Search
       </StyledButtonLarge>
     </StyledSearchForm>

@@ -55,7 +55,6 @@ describe('Search Form component', () => {
     render(<SearchForm {...searchFormProps} />);
 
     const input = screen.getByRole("textbox");
-    screen.debug();
     const spy = vitest.spyOn(searchFormProps, 'handleSearch');
 
     fireEvent.change(input, {
