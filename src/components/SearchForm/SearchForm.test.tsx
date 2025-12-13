@@ -65,4 +65,15 @@ describe('Search Form component', () => {
 
     expect(spy).toHaveBeenCalledTimes(1);
   })
+
+  it('renders snapshot', () => {
+    const searchFormProps = {
+      searchTerm: "React",
+      storyEndpoint: "",
+      handleSearch: vi.fn(),
+      setUrl: vi.fn(),
+    };
+    const { container } = render(<SearchForm {...searchFormProps}></SearchForm>);
+    expect(container.firstChild).toMatchSnapshot();
+  })
 });

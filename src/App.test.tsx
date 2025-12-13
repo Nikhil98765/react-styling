@@ -144,7 +144,7 @@ describe('App Component', () => {
       render(<App />);
 
       await waitFor(() => reactPromise);
-      screen.debug();
+
       expect(screen.queryByDisplayValue(/React/)).toBeInTheDocument();
       expect(screen.queryByDisplayValue(/JavaScript/)).toBeNull();
       expect(screen.queryByText(/Jordan Walke/)).toBeInTheDocument();
@@ -158,10 +158,8 @@ describe('App Component', () => {
         }
       });
 
-      fireEvent.click(screen.getByText('Search'));
+      fireEvent.click(screen.getByText(/Search:/));
       await waitFor(async () => await javascriptPromise);
-
-      screen.debug();
 
       expect(screen.queryByDisplayValue(/React/)).toBeNull();
       expect(screen.queryByDisplayValue(/JavaScript/)).toBeInTheDocument();
