@@ -22,7 +22,6 @@ const StyledColumn = styled.span<StyledItemProps>`
   padding: 0 5px;
   white-space: nowrap;
   overflow: hidden;
-  white-space: nowrap;
   text-overflow: ellipsis;
 
   a {

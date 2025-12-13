@@ -124,7 +124,7 @@ export const App = () => {
       });
     } catch (error) {
       storiesDispatcher({
-            type: ACTIONS.STORIES_FETCH_FAILURE,
+        type: ACTIONS.STORIES_FETCH_FAILURE,
       });
     }
   }, [url]);
