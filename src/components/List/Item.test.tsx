@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 
-import { Story } from "../utils";
+import { Story } from "../../utils";
 import Item from "./Item";
 
 const storyOne: Story = {
@@ -25,8 +25,8 @@ const storyTwo: Story = {
 const stories = [storyOne, storyTwo];
 
 describe("List Component", () => {
-  it('renders all properties', () => {
-    render(<Item item={storyOne} deleteHandler={() => { }} />);
+  it("renders all properties", () => {
+    render(<Item item={storyOne} deleteHandler={() => {}} />);
     expect(screen.getByText("Jordan Walke")).toBeInTheDocument();
     expect(screen.getByText("React")).toHaveAttribute(
       "href",
@@ -34,17 +34,17 @@ describe("List Component", () => {
     );
   });
 
-  it('renders a clickable dismiss button', () => {
-    render(<Item item={storyOne} deleteHandler={() => { }} />);
+  it("renders a clickable dismiss button", () => {
+    render(<Item item={storyOne} deleteHandler={() => {}} />);
     // screen.getByRole('');
-    expect(screen.getByRole('button')).toBeInTheDocument();
-  })
+    expect(screen.getByRole("button")).toBeInTheDocument();
+  });
 
-  it('should trigger dismiss button handler on click of it', () => {
+  it("should trigger dismiss button handler on click of it", () => {
     const handler = vi.fn();
 
     render(<Item item={storyOne} deleteHandler={handler} />);
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByRole("button"));
     expect(handler).toHaveBeenCalledOnce();
-  })
+  });
 });
