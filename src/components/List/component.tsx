@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { sortBy } from 'lodash';
+import {reverse, sortBy} from 'lodash';
 
 import Item from "./Item.js";
 import { Story } from "../../utils.js";
@@ -17,17 +17,30 @@ const SORTS = {
   POINTS: (list: Story[]) => sortBy(list, 'points')
 }
 
-export type SortType = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINTS";
+export type SortKey = "NONE" | "TITLE" | "AUTHOR" | "COMMENTS" | "POINTS";
+export type SortOrder = {
+  sortKey: SortKey;
+  order?: 'asc' | 'desc';
+}
 
 export const List = memo(({ list, deleteHandler }: ListProps) => {
 
-  const [sortKey, setSortKey] = useState<SortType>("NONE");
+  const [sortOrder, setSortOrder] = useState<SortOrder>({sortKey: 'NONE'});
 
-  const handleSort = (sortKey: SortType) => {
-    setSortKey(sortKey);
-  }
+  const handleSort = (sortKey:  SortKey) => {
+    setSortOrder(prevState => {
+      if(prevState.sortKey ===  sortKey) {
+        return {
+          sortKey: sortOrder.sortKey,
+          order: prevState.order === 'asc' ? 'desc' : 'asc'
+        }
+      } else {
+        return {sortKey, order: 'asc'}
+      }
+    });
+  };
 
-  const sortedList = SORTS[sortKey](list);
+  const sortedList = (sortOrder.order === 'asc') ? SORTS[sortOrder.sortKey](list) :  reverse(SORTS[sortOrder.sortKey](list));
 
   return (
     <ul>
