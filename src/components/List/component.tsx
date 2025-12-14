@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import {reverse, sortBy} from 'lodash';
+import { sortBy } from 'lodash';
 
 import Item from "./Item.js";
 import { Story } from "../../utils.js";
@@ -40,7 +40,7 @@ export const List = memo(({ list, deleteHandler }: ListProps) => {
     });
   };
 
-  const sortedList = (sortOrder.order === 'asc') ? SORTS[sortOrder.sortKey](list) :  reverse(SORTS[sortOrder.sortKey](list));
+  const sortedList = (sortOrder.order === 'asc') ? SORTS[sortOrder.sortKey](list) :  SORTS[sortOrder.sortKey](list).reverse();
 
   return (
     <ul>

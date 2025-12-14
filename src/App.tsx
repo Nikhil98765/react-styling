@@ -107,6 +107,7 @@ export const App = () => {
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState("search", "");
   const [searchTerm, setSearchTerm] = useState("React");
   const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
+  const [recentSearches, setRecentSearches] = useState<string[]>(["React"]);
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
     data: [],
@@ -155,7 +156,31 @@ export const App = () => {
       <StyledHeadlinePrimary className={`${styles.headlinePrimary}`}>
         {title}
       </StyledHeadlinePrimary>
-      <SearchForm {...{ storyEndpoint, searchTerm, handleSearch, setUrl }} />
+      <SearchForm
+        {...{
+          storyEndpoint,
+          searchTerm,
+          handleSearch,
+          setUrl,
+          setRecentSearches,
+        }}
+      />
+
+      <div style={{display: "flex"}}>
+        Recent Searches : 
+        {
+          recentSearches.map(searchItem => (
+            <span>
+              <button style={{backgroundColor:"gray", borderRadius: '2px', border: '2px', margin: '2px', padding: '2px'}} onClick={() => {
+                handleSearch({
+                  target: { value: searchItem }
+                });
+                setUrl(`${ storyEndpoint }${ searchItem }`)
+              }}>{searchItem}</button>
+            </span>
+          ))
+        }
+      </div>
 
       {stories.isError && <p>Something went wrong ...</p>}
 
