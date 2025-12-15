@@ -106,8 +106,7 @@ export const storiesReducer = (state: AppState, action: StoriesAction) => {
 export const App = () => {
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState("search", "");
   const [searchTerm, setSearchTerm] = useState("React");
-  const [url, setUrl] = useState(`${storyEndpoint}${searchTerm}`);
-  const [recentSearches, setRecentSearches] = useState<string[]>(["React"]);
+  const [urls, setUrls] = useState<string[]>([searchTerm]);
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
     data: [],
@@ -121,7 +120,9 @@ export const App = () => {
     });
 
     try {
-      const results = await axios.get(url);
+      console.log("🚀 ~ App ~ urls:", urls);
+      
+      const results = await axios.get(`${storyEndpoint}${urls[0]}`);
       storiesDispatcher({
         type: ACTIONS.STORIES_FETCH_SUCCESS,
         payload: results.data.hits,
@@ -131,7 +132,7 @@ export const App = () => {
         type: ACTIONS.STORIES_FETCH_FAILURE,
       });
     }
-  }, [url]);
+  }, [urls]);
 
   useEffect(() => {
     handleFetchStories();
@@ -142,14 +143,14 @@ export const App = () => {
     setSavedSearchTerm(event.target.value);
   };
 
-  const deleteStory = (id: string) => {
+  const deleteStory = useCallback((id: string) => {
     storiesDispatcher({
       type: ACTIONS.REMOVE_STORY,
       payload: {
         objectID: id,
       },
     });
-  };
+  }, []);
 
   return (
     <StyledContainer className={`${styles.container}`}>
@@ -161,25 +162,40 @@ export const App = () => {
           storyEndpoint,
           searchTerm,
           handleSearch,
-          setUrl,
-          setRecentSearches,
+          setUrls,
         }}
       />
 
-      <div style={{display: "flex"}}>
-        Recent Searches : 
+      <div style={{ display: "flex" }}>
+        Recent Searches :
         {
-          recentSearches.map(searchItem => (
-            <span>
-              <button style={{backgroundColor:"gray", borderRadius: '2px', border: '2px', margin: '2px', padding: '2px'}} onClick={() => {
+          urls.slice(1, 6).map((searchItem, index) => (
+          <span key={searchItem + index}>
+            <button
+              style={{
+                backgroundColor: "gray",
+                borderRadius: "2px",
+                border: "2px",
+                margin: "2px",
+                padding: "2px",
+              }}
+              onClick={() => {
                 handleSearch({
-                  target: { value: searchItem }
+                  target: { value: searchItem },
                 });
-                setUrl(`${ storyEndpoint }${ searchItem }`)
-              }}>{searchItem}</button>
-            </span>
-          ))
-        }
+                setUrls((prevState) => {
+                  const searchTermIndex = prevState.indexOf(searchItem);
+                  if (searchTermIndex !== -1) {
+                    prevState.splice(searchTermIndex, 1);
+                  }
+                  return [searchItem, ...prevState]
+                });
+              }}
+            >
+              {searchItem}
+            </button>
+          </span>
+        ))}
       </div>
 
       {stories.isError && <p>Something went wrong ...</p>}

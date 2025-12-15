@@ -11,7 +11,6 @@ export const useStorageState = (key: string, initialState: string) => {
     if(!isMounted.current) {
       isMounted.current = true;
     } else {
-      console.log("useStorageState ~ searchTerm:", searchTerm);
       localStorage.setItem(key, searchTerm);
     }
 
