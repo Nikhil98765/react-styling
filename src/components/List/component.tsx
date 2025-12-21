@@ -40,7 +40,7 @@ export const List = memo(({ list, deleteHandler }: ListProps) => {
     });
   };
 
-  const sortedList = (sortOrder.order === 'asc') ? SORTS[sortOrder.sortKey](list) :  SORTS[sortOrder.sortKey](list).reverse();
+  const sortedList = (sortOrder.order === 'desc') ? SORTS[sortOrder.sortKey](list).reverse() :  SORTS[sortOrder.sortKey](list);
 
   return (
     <ul>

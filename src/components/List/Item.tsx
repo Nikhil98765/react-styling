@@ -1,4 +1,3 @@
-
 import { Story } from "../../utils";
 import { StyledButtonSmall, StyledColumn, StyledItem } from "./styles";
 
@@ -10,6 +9,8 @@ type ItemProps = {
 
 
 const Item = ({ item, deleteHandler }: ItemProps) => {
+  console.log("🚀 ~ Item ~ item:", item.objectID);
+  
   return (
     <StyledItem className="item">
       <StyledColumn width="40%">

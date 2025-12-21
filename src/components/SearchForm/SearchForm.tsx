@@ -7,12 +7,14 @@ type SearchFormProps = {
   searchTerm: string;
   handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
   setUrls: any;
+  resetPagination: any;
 };
 
 export const SearchForm = ({
   searchTerm,
   handleSearch,
   setUrls,
+  resetPagination,
 }: SearchFormProps) => {
   return (
     <StyledSearchForm
@@ -24,6 +26,7 @@ export const SearchForm = ({
           }
           return [searchTerm, ...prevState];
         });
+        resetPagination();
         event.preventDefault();
       }}
     >

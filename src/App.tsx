@@ -18,7 +18,6 @@ const title = "Hello React";
 const storyEndpoint = "https://hn.algolia.com/api/v1/search?query=";
 
 const StyledContainer = styled.div`
-  height: 100vw;
   padding: 20px;
   background: #83a4d4;
   background: linear-gradient(to left, #b6fbff, #83a4d4);
@@ -35,6 +34,8 @@ export type AppState = {
   data: Story[];
   isLoading: boolean;
   isError: boolean;
+  page: number;
+  nbPages: number;
 };
 
 const ACTIONS = {
@@ -42,6 +43,7 @@ const ACTIONS = {
   REMOVE_STORY: "REMOVE_STORY",
   STORIES_FETCH_INIT: "STORIES_FETCH_INIT",
   STORIES_FETCH_FAILURE: "STORIES_FETCH_FAILURE",
+  PAGINATION_RESET: "PAGINATION_RESET"
 } as const;
 
 export type StoriesFetchInitAction = {
@@ -53,7 +55,11 @@ export type StoriesFetchFailureAction = {
 
 export type StoriesFetchSuccessAction = {
   type: "STORIES_FETCH_SUCCESS";
-  payload: Story[];
+  payload: {
+    data: Story[],
+    page: number,
+    nbPages: number
+  }
 };
 
 export type RemoveStoryAction = {
@@ -61,20 +67,29 @@ export type RemoveStoryAction = {
   payload: { objectID: string };
 };
 
+export type PaginationResetAction = {
+  type: "PAGINATION_RESET";
+};
+
 type StoriesAction =
   | StoriesFetchInitAction
   | StoriesFetchFailureAction
   | StoriesFetchSuccessAction
-  | RemoveStoryAction;
+  | RemoveStoryAction
+  | PaginationResetAction;
 
 export const storiesReducer = (state: AppState, action: StoriesAction) => {
   switch (action.type) {
-    case ACTIONS.STORIES_FETCH_SUCCESS:
+    case ACTIONS.STORIES_FETCH_SUCCESS: {
+      const payload = (action as StoriesFetchSuccessAction).payload;
       return {
-        data: (action as StoriesFetchSuccessAction).payload,
+        data: [...state.data, ...payload.data],
         isLoading: false,
         isError: false,
+        page: payload.page,
+        nbPages: payload.nbPages,
       };
+    }
     case ACTIONS.REMOVE_STORY: {
       const { payload } = action as RemoveStoryAction;
       const filteredStories = state.data.filter(
@@ -84,19 +99,26 @@ export const storiesReducer = (state: AppState, action: StoriesAction) => {
         data: filteredStories,
         isLoading: false,
         isError: false,
+        page: 0,
+        nbPages: 0
       };
     }
     case ACTIONS.STORIES_FETCH_INIT:
       return {
-        data: [],
-        isLoading: true,
+        data: [...state.data],
+        isLoading: state.data.length === 0,
         isError: false,
+        page: 0,
+        nbPages: 0
       };
     case ACTIONS.STORIES_FETCH_FAILURE:
+    case ACTIONS.PAGINATION_RESET:
       return {
         data: [],
         isLoading: false,
         isError: true,
+        page: 0,
+        nbPages: 0,
       };
     default:
       throw new Error();
@@ -107,11 +129,14 @@ export const App = () => {
   const [savedSearchTerm, setSavedSearchTerm] = useStorageState("search", "");
   const [searchTerm, setSearchTerm] = useState("React");
   const [urls, setUrls] = useState<string[]>([searchTerm]);
+  const [triggerLoad, setTriggerLoad] = useState<boolean>(false);
 
   const [stories, storiesDispatcher] = useReducer(storiesReducer, {
     data: [],
     isLoading: false,
     isError: false,
+    page: 0,
+    nbPages: 0
   });
 
   const handleFetchStories = useCallback(async () => {
@@ -119,20 +144,22 @@ export const App = () => {
       type: ACTIONS.STORIES_FETCH_INIT,
     });
 
-    try {
-      console.log("🚀 ~ App ~ urls:", urls);
-      
-      const results = await axios.get(`${storyEndpoint}${urls[0]}`);
+    try {      
+      const results = await axios.get(`${storyEndpoint}${urls[0]}&page=${stories.page}`);
       storiesDispatcher({
         type: ACTIONS.STORIES_FETCH_SUCCESS,
-        payload: results.data.hits,
+        payload: {
+          data: results.data.hits,
+          page: results.data.page + 1,
+          nbPages: results.data.nbPages
+        }
       });
     } catch (error) {
       storiesDispatcher({
         type: ACTIONS.STORIES_FETCH_FAILURE,
       });
     }
-  }, [urls]);
+  }, [urls, triggerLoad]);
 
   useEffect(() => {
     handleFetchStories();
@@ -142,6 +169,12 @@ export const App = () => {
     setSearchTerm(event.target.value);
     setSavedSearchTerm(event.target.value);
   };
+
+  const resetPagination = () => {
+    storiesDispatcher({
+      type: ACTIONS.PAGINATION_RESET
+    })
+  }
 
   const deleteStory = useCallback((id: string) => {
     storiesDispatcher({
@@ -163,13 +196,13 @@ export const App = () => {
           searchTerm,
           handleSearch,
           setUrls,
+          resetPagination,
         }}
       />
 
       <div style={{ display: "flex" }}>
         Recent Searches :
-        {
-          urls.slice(1, 6).map((searchItem, index) => (
+        {urls.slice(1, 6).map((searchItem, index) => (
           <span key={searchItem + index}>
             <button
               style={{
@@ -188,7 +221,7 @@ export const App = () => {
                   if (searchTermIndex !== -1) {
                     prevState.splice(searchTermIndex, 1);
                   }
-                  return [searchItem, ...prevState]
+                  return [searchItem, ...prevState];
                 });
               }}
             >
@@ -199,12 +232,16 @@ export const App = () => {
       </div>
 
       {stories.isError && <p>Something went wrong ...</p>}
+      {stories.isLoading ? <h3>Loading...</h3> : null}
 
-      {stories.isLoading ? (
-        <h3>Loading...</h3>
-      ) : (
+      <>
         <List list={stories.data} deleteHandler={deleteStory} />
-      )}
+        {stories.page !== stories.nbPages && (
+          <button onClick={() => setTriggerLoad((state) => !state)}>
+            Load More...
+          </button>
+        )}
+      </>
     </StyledContainer>
   );
 };
